@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<style>
+  * {
+    word-break: break-all;
+    box-sizing: border-box;
+  }
+
+  .result-body,
+  .about {
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    border: solid 1px black;
+    padding: 5px;
+    white-space: pre;
+    font-family: monospace;
+    background-color: #EEE;
+  }
+
+  .api-inputs {
+    display: flex;
+  }
+
+  .api-inputs>div {
+    padding: 0 10px;
+  }
+
+  .param-input input {
+    font-family: monospace;
+    width: 100%;
+  }
+
+  .param-input {
+    padding-left: 0;
+  }
+
+  .param-input>li {
+    display: flex;
+  }
+
+  .param-input.api-keys>li>div:nth-child(1) {
+    flex: 0 0 170px;
+  }
+
+  .param-input>li>div:nth-child(1) {
+    flex: 0 0 100px;
+  }
+
+  .param-input>li>div:nth-child(2) {
+    flex: 1 1 0;
+    padding: 5px;
+  }
+
+  .param-input>li span {
+    font-size: small;
+  }
+
+  .param-input>li:nth-child(odd) {
+    background-color: #DDD;
+  }
+
+  .param-input>li:nth-child(even) {
+    background-color: #EEE;
+  }
+</style>
+<!-- sha1 -->
+<script src="./hmac-sha1.js" defer></script>
+<script src="./enc-base64.js" defer></script>
+<script src="./oauth-1.0a.js" defer></script>
+<script src="./index.js" defer></script>
+<h3>使い方</h3>
+同一生成元ポリシーに引っかかるので、chromeの起動時オプションに --disable-web-security を指定してポリシーを無効化した状態で試してください。<br>
+<a href="https://developer.twitter.com/en/account/labs">https://developer.twitter.com/en/account/labs</a>より、Tweets and Usersを有効化して下さい。<br>
+labsのapiのドキュメントは <a href="https://developer.twitter.com/en/docs/labs/tweets-and-users/api-reference/get-tweets-v1">https://developer.twitter.com/en/docs/labs/tweets-and-users/api-reference/get-tweets-v1</a></a><br>
+fetchの制限でapiのレスポンスヘッダが取得出来ないので、API limitは devtoolから直接確認して下さい。
+<h3>API認証情報</h3>
+<ul class="param-input api-keys">
+  <li>
+    <div>consumerKey</div>
+    <div>
+      <input type="text" id="api-consumer-key"><br>
+    </div>
+  </li>
+  <li>
+    <div>consumerKeySecret</div>
+    <div>
+      <input type="text" id="api-consumer-secret"><br>
+    </div>
+  </li>
+  <li>
+    <div>AccessToken</div>
+    <div>
+      <input type="text" id="api-access-key"><br>
+    </div>
+  </li>
+  <li>
+    <div>AccessTokenSecret</div>
+    <div>
+      <input type="text" id="api-access-secret"><br>
+    </div>
+  </li>
+</ul>
+
+<h3>/labs/1/tweets</h3>
+<ul class="param-input">
+  <li>
+    <div>ids</div>
+    <div>
+      <input type="text" id="tweets-ids" value="1128457375814303744,1138862637394137093,1138505981460193280"><br>
+      <span>ツイートID。複数指定する場合はカンマ区切り。最大100個</span>
+    </div>
+  </li>
+  <li>
+    <div>format</div>
+    <div>
+      <input type="text" id="tweets-format" value="detailed"><br>
+      <span>compact default detailed</span>
+    </div>
+  </li>
+  <li>
+    <div>expansions</div>
+    <div>
+      <input type="text" id="tweets-expansions"><br>
+      <span>attachments.poll_ids, attachments.media_keys, author_id, geo.place_id, in_reply_to_user_id, referenced_tweets.id</span>
+    </div>
+  </li>
+</ul>
+<button id="tweets-submit">送信</button>
+<h3>/labs/1/users</h3>
+<ul class="param-input">
+  <li>
+    <div>ids</div>
+    <div>
+      <input type="text" id="users-ids"><br>
+      <span>ユーザID。スクリーンネームと排他。複数指定する場合はカンマ区切り。最大100個</span>
+    </div>
+  </li>
+  <li>
+    <div>usernames</div>
+    <div>
+      <input type="text" id="users-usernames" value="TwitterDev,TwitterDevJP"><br>
+      <span>スクリーンネーム。idsと排他。複数指定する場合はカンマ区切り。最大100個</span>
+    </div>
+  </li>
+  <li>
+    <div>format</div>
+    <div>
+      <input type="text" id="users-format" value="detailed"><br>
+      <span>compact default detailed</span>
+    </div>
+  </li>
+</ul>
+<button id="users-submit">送信</button>
+<h3>レスポンス結果</h3>
+<button id="copy-result">クリップボードにコピー</button>
+<div id="result-body" class="result-body"></div>
+<h3>about</h3>
+<div class="about">
+  製作者 Fushihara https://twitter.com/Fushihara
+  OSS/参考URL
+  oauth機能
+  https://www.npmjs.com/package/oauth-1.0a
+
+  sha1ハッシュ化機能
+  https://github.com/brix/crypto-js
+
+  twitterのoauth1認証ロジック参考
+  https://syncer.jp/Web/API/Twitter/REST_API/#section-4
+</div>
